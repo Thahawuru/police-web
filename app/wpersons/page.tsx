@@ -22,25 +22,31 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 interface Maintainer {
     id: number;
-  badgeNumber: number;
-  name: string;
-  rank: string;
-  position: string;
-  department: string;
-  status: string;
-  doj: string; //date of join
+    name: string;
+    dob: string;
+    gender: string;
+    nic: number;
+    reasonForBeingWanted: string;
+    color: string;
+    height: string;
+    bodyType:string;
+    otherInfo: string;
+    status: string;
 }
 
 const initialMaintainers: Maintainer[] = [
   {
     id: 1,
-    badgeNumber: 1,
     name: 'diniru',
-    rank: 'dig',
-    position: 'zdx',
-    department: 'mount lavinia',
-    status: 'active', ////Active, On Leave, Retired
-    doj: '2001-06-12',
+    dob: '2001-9-9',
+    gender: "male",
+    nic: 200117710551,
+    reasonForBeingWanted: 'murder',
+    color: 'black',
+    height: '6ft',
+    bodyType:'body builder',
+    otherInfo:'fucking idiot' ,
+    status: 'active',
   },
 ];
 
@@ -89,13 +95,14 @@ export default function Page() {
 
   const filteredMaintainers = maintainers.filter(
     (maintainer) =>
-        maintainer.badgeNumber.toString().includes(searchQuery) ||
+        maintainer.nic.toString().includes(searchQuery) ||
         maintainer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        maintainer.rank.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        maintainer.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        maintainer.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        maintainer.dob.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        maintainer.color.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        maintainer.height.toLowerCase().includes(searchQuery.toLowerCase()) ||
         maintainer.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        maintainer.doj.toLowerCase().includes(searchQuery.toLowerCase())
+        maintainer.bodyType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        maintainer.gender.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -111,7 +118,7 @@ export default function Page() {
         <div className="flex flex-row w-full h-auto p-4 mt-20">
           <div className="flex flex-row justify-start items-center w-2/3">
             <h1 className="text-2xl font-bold text-secondaryTwo w-full text-left pl-10">
-              <b>Existing Accounts</b>
+              <b>Fugitve Persons</b>
             </h1>
           </div>
 
@@ -133,12 +140,12 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <Link href="/admin/accounts/addAccount" className="w-3/4">
+        <Link href="/wpersons/addwperson" className="w-3/4">
               <button
                 type="submit"
                 className="flex-none rounded-custom-3 bg-secondary hover:bg-secondaryTwo  px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform ml-10 mb-2"
               >
-                Add Maintainer
+                Add Fugitive Person
               </button>
             </Link>
         <div className="w-full flex flex-row justify-center items-center">
@@ -148,13 +155,14 @@ export default function Page() {
                 <Table aria-label="maintainer table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Badge Number</TableCell>
+                      <TableCell>Id</TableCell>
                       <TableCell>Name</TableCell>
-                      <TableCell>Rank</TableCell>
-                      <TableCell>Position</TableCell>
-                      <TableCell>Department</TableCell>
+                      <TableCell>Date Of Birth</TableCell>
+                      <TableCell>Gender</TableCell>
+                      <TableCell>NIC</TableCell>
+                      <TableCell>Height</TableCell>
+                      <TableCell>Color</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Date of joining</TableCell>
                       <TableCell align="right">Actions</TableCell>
                     </TableRow>
                   </TableHead>
@@ -166,20 +174,23 @@ export default function Page() {
                       )
                       .map((maintainer) => (
                         <TableRow key={maintainer.id}>
-                          <TableCell>{maintainer.badgeNumber}</TableCell>
+                          <TableCell>{maintainer.id}</TableCell>
                           <TableCell>{maintainer.name}</TableCell>
-                          <TableCell>{maintainer.rank}</TableCell>
-                          <TableCell>{maintainer.position}</TableCell>
-                          <TableCell>{maintainer.department}</TableCell>
+                          <TableCell>{maintainer.dob}</TableCell>
+                          <TableCell>{maintainer.gender}</TableCell>
+                          <TableCell>{maintainer.nic}</TableCell>
+                          <TableCell>{maintainer.height}</TableCell>
+                          <TableCell>{maintainer.color}</TableCell>
                           <TableCell>{maintainer.status}</TableCell>
-                          <TableCell>{maintainer.doj}</TableCell>
                           <TableCell align="right">
-                            <IconButton
-                              color="primary"
-                              onClick={() => handlePreview(maintainer.id)}
-                            >
-                              <VisibilityIcon />
-                            </IconButton>
+                            <Link href={`wpersons/${maintainer.id}`}>
+                                <IconButton
+                                color="primary"
+                                onClick={() => handlePreview(maintainer.id)}
+                                >
+                                <VisibilityIcon />
+                                </IconButton>
+                            </Link>
                             <IconButton
                               color="error"
                               onClick={() => handleRevoke(maintainer.id)}
