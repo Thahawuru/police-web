@@ -5,31 +5,33 @@ import Welcome from "../../components/navbar/navbar";
 import { TextField, Box, Button, Typography } from "@mui/material";
 import Image from 'next/image';
 import profileAvatar from '../../../public/7309667.jpg';
+import { useApiKeys } from "../../api/useApiKeys";
+
+// interface Maintainer {
+//   id: number;
+//   badgeNumber: number;
+//   name: string;
+//   rank: string;
+//   position: string;
+//   department: string;
+//   status: string;
+//   doj: string; // date of joining
+//   number: number;
+// }
 
 interface Maintainer {
-  id: number;
-  badgeNumber: number;
-  name: string;
-  rank: string;
-  position: string;
-  department: string;
-  status: string;
-  doj: string; // date of joining
-  number: number;
+  email: string;
+  password: string;
+  NIC: string;
 }
 
 export default function Page() {
+  const {createPoliceOfficer} = useApiKeys();
   const [activeItem, setActiveItem] = useState("Police Officers");
   const [maintainer, setMaintainer] = useState<Maintainer>({
-    id: 1,
-    badgeNumber: 2,
-    name: '',
-    rank: '',
-    position: '',
-    department: '',
-    status: '',
-    doj: '', // date of joining
-    number: +94,
+   email: '',
+   password: '',
+   NIC:''
   });
 
   const [files, setFiles] = useState<File[]>([]);
@@ -47,10 +49,17 @@ export default function Page() {
     });
   };
 
-  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // Handle form submission logic here, such as making an API call
     console.log("Creating maintainer:", maintainer);
+    try{
+      const response = await createPoliceOfficer(maintainer);
+      // Toast({ type: "success", message: "Police officer added successfully" });
+      console.log(response);
+    }catch(error){
+      console.log(error);
+      // Toast({ type: "fail", message: "Failed to add police officer" });
+    }
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,10 +106,10 @@ export default function Page() {
             >
               <TextField
                 fullWidth
-                label="ID"
+                label="email"
                 variant="outlined"
-                name="id"
-                value={maintainer.id}
+                name="email"
+                value={maintainer.email}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -110,6 +119,34 @@ export default function Page() {
                 }}
               />
               <TextField
+                fullWidth
+                label="password"
+                variant="outlined"
+                name="password"
+                value={maintainer.password}
+                onChange={handleInputChange}
+                margin="normal"
+                InputProps={{
+                  style: {
+                    height: "45px",
+                  },
+                }}
+              />
+              <TextField
+                fullWidth
+                label="NIC"
+                variant="outlined"
+                name="NIC"
+                value={maintainer.NIC}
+                onChange={handleInputChange}
+                margin="normal"
+                InputProps={{
+                  style: {
+                    height: "45px",
+                  },
+                }}
+              />
+              {/* <TextField
                 fullWidth
                 label="Name"
                 variant="outlined"
@@ -235,8 +272,8 @@ export default function Page() {
                   },
                   disabled: true
                 }} 
-              /> 
-              <div className="p-3 md:w-1/2 w-[360px] rounded-md">
+              />  */}
+              {/* <div className="p-3 md:w-1/2 w-[360px] rounded-md">
                 <span className="flex justify-center items-center bg-white text-[12px] mb-1 text-red-500">{message}</span>
                 <div className="h-32 w-full overflow-hidden relative shadow-md border-2 items-center rounded-md cursor-pointer border-gray-400 border-dotted">
                   <input type="file" onChange={handleFileChange} className="h-full w-full opacity-0 z-10 absolute" multiple />
@@ -262,7 +299,7 @@ export default function Page() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
               <Button
                 type="submit"
                 onClick={handleSubmit}
@@ -276,4 +313,8 @@ export default function Page() {
       </div>
     </div>
   );
+}
+
+function Toast(arg0: { type: string; message: string; }) {
+  throw new Error("Function not implemented.");
 }
