@@ -21,7 +21,7 @@ const menuItems = [
     items: [
       {
         title: "Dashboard",
-        href: "http://localhost:3000",
+        href: "/",
         icon: <BiHome />,
         badge: null,
       },
@@ -32,7 +32,7 @@ const menuItems = [
     items: [
       {
         title: "Police Officers",
-        href: "http://localhost:3000/officers",
+        href: "/officers",
         icon: <BiGroup />,
         badge: null,
       },
@@ -43,7 +43,7 @@ const menuItems = [
     items: [
       {
         title: "Wanted Persons",
-        href: "http://localhost:3000/wpersons",
+        href: "/wpersons",
         icon: <BiTask />,
         badge: null,
       },
@@ -54,7 +54,7 @@ const menuItems = [
     items: [
       {
         title: "Wanted Vehicles",
-        href: "http://localhost:3000/wvehicles",
+        href: "/wvehicles",
         icon: <BiTask />,
         badge: null,
       },
