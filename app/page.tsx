@@ -36,9 +36,9 @@ function Home() {
             <div className="flex flex-col justify-center w-1/6 h-[150px] p-4 bg-secondaryThree ml-5 mr-5 shadow-md rounded-custom-1 hover:shadow-lg transition ease-in-out duration-150 cursor-pointer">
               <div className="flex mb-2 flex flex-col justify-center w-full h-full">
                 <h1 className="text-1xl text-secondaryTwo font-bold">
-                  New Wallets
+                  Police Officers
                 </h1>
-                <p className="text-secondaryTwo font-bold text-2xl">1000</p>
+                <p className="text-secondaryTwo font-bold text-2xl">400</p>
                 <div className="flex flex-row justify-end w-full mt-10">
                   <BiUser className="text-secondaryTwo mr-2" size={24} />
                 </div>
