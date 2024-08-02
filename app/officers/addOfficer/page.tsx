@@ -3,39 +3,51 @@ import React, { useState, ChangeEvent, MouseEvent } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
 import { TextField, Box, Button, Typography } from "@mui/material";
-import Image from 'next/image';
-import profileAvatar from '../../../public/7309667.jpg';
+import Image from "next/image";
+import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
+import Toast from "../../components/utils/toaster";
 
-// interface Maintainer {
-//   id: number;
-//   badgeNumber: number;
-//   name: string;
-//   rank: string;
-//   position: string;
-//   department: string;
-//   status: string;
-//   doj: string; // date of joining
-//   number: number;
-// }
-
-interface Maintainer {
+interface PoliceMan {
   email: string;
-  password: string;
-  NIC: string;
+  id: number;
+  badgeNumber: number;
+  name: string;
+  rank: string;
+  position: string;  
+  department: string;
+  doj: string; // date of joining
+  number: number;
 }
 
+const fields = [
+  { label: "Email", name: "email", type: "email" },
+  { label: "Name", name: "name", type: "text" },
+  { label: "Badge Number", name: "badgeNumber", type: "number" },
+  { label: "Rank", name: "rank", type: "text" },
+  { label: "Position", name: "position", type: "text" },
+  { label: "Department", name: "department", type: "text" },
+  { label: "Date of Joining", name: "doj", type: "date" },
+  { label: "Phone Number", name: "number", type: "number" },
+];
+
 export default function Page() {
-  const {createPoliceOfficer} = useApiKeys();
+  const { createPoliceOfficer } = useApiKeys();
   const [activeItem, setActiveItem] = useState("Police Officers");
-  const [maintainer, setMaintainer] = useState<Maintainer>({
-   email: '',
-   password: '',
-   NIC:''
+  const [policeman, setPoliceman] = useState<PoliceMan>({
+    email: "",
+    id: 0,
+    badgeNumber: 0,
+    name: "",
+    rank: "",
+    position: "",
+    department: "",
+    doj: "",
+    number: 0,
   });
 
   const [files, setFiles] = useState<File[]>([]);
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
 
   const handleSetActiveItem = (itemTitle: string) => {
     setActiveItem(itemTitle);
@@ -43,22 +55,22 @@ export default function Page() {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setMaintainer({
-      ...maintainer,
+    setPoliceman({
+      ...policeman,
       [name]: value,
     });
   };
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log("Creating maintainer:", maintainer);
-    try{
-      const response = await createPoliceOfficer(maintainer);
-      // Toast({ type: "success", message: "Police officer added successfully" });
+    console.log("Creating police officer:", policeman);
+    try {
+      const response = await createPoliceOfficer(policeman);
+      Toast({ type: "success", message: "Police officer added successfully" });
       console.log(response);
-    }catch(error){
+    } catch (error) {
       console.log(error);
-      // Toast({ type: "fail", message: "Failed to add police officer" });
+      Toast({ type: "fail", message: "Failed to add police officer" });
     }
   };
 
@@ -69,7 +81,7 @@ export default function Page() {
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         const fileType = file.type;
-        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+        const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
         if (validImageTypes.includes(fileType)) {
           setFiles((prevFiles) => [...prevFiles, file]);
         } else {
@@ -80,7 +92,7 @@ export default function Page() {
   };
 
   const removeImage = (fileName: string) => {
-    setFiles(files.filter(file => file.name !== fileName));
+    setFiles(files.filter((file) => file.name !== fileName));
   };
 
   return (
@@ -104,202 +116,24 @@ export default function Page() {
               noValidate
               autoComplete="off"
             >
-              <TextField
-                fullWidth
-                label="email"
-                variant="outlined"
-                name="email"
-                value={maintainer.email}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="password"
-                variant="outlined"
-                name="password"
-                value={maintainer.password}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="NIC"
-                variant="outlined"
-                name="NIC"
-                value={maintainer.NIC}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              {/* <TextField
-                fullWidth
-                label="Name"
-                variant="outlined"
-                name="name"
-                value={maintainer.name}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Police Badge Number"
-                variant="outlined"
-                name="badgeNumber"
-                value={maintainer.badgeNumber}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Phone Number"
-                variant="outlined"
-                name="number"
-                value={maintainer.number}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Rank"
-                variant="outlined"
-                name="rank"
-                value={maintainer.rank}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Position"
-                variant="outlined"
-                name="position"
-                value={maintainer.position}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Department"
-                variant="outlined"
-                name="department"
-                value={maintainer.department}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Status"
-                variant="outlined"
-                name="status"
-                value={maintainer.status}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
-                label="Date Of Join"
-                variant="outlined"
-                name="doj"
-                value={maintainer.doj}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              /> 
-              <TextField
-                fullWidth
-                label="Upload Photos"
-                variant="outlined"
-                name="doj"
-                value={maintainer.doj}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                  disabled: true
-                }} 
-              />  */}
-              {/* <div className="p-3 md:w-1/2 w-[360px] rounded-md">
-                <span className="flex justify-center items-center bg-white text-[12px] mb-1 text-red-500">{message}</span>
-                <div className="h-32 w-full overflow-hidden relative shadow-md border-2 items-center rounded-md cursor-pointer border-gray-400 border-dotted">
-                  <input type="file" onChange={handleFileChange} className="h-full w-full opacity-0 z-10 absolute" multiple />
-                  <div className="h-full w-full bg-gray-200 absolute z-1 flex justify-center items-center top-0">
-                    <div className="flex flex-col">
-                      <i className="mdi mdi-folder-open text-[30px] text-gray-400 text-center"></i>
-                      <span className="text-[12px]">Drag and Drop a file</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {files.map((file, key) => (
-                    <div key={key} className="w-full h-16 flex items-center justify-between rounded p-3 bg-white">
-                      <div className="flex flex-row items-center gap-2">
-                        <div className="h-12 w-12">
-                          <img className="w-full h-full rounded" src={URL.createObjectURL(file)} alt={file.name} />
-                        </div>
-                        <span className="truncate w-44">{file.name}</span>
-                      </div>
-                      <div onClick={() => removeImage(file.name)} className="h-6 w-6 bg-red-400 flex items-center cursor-pointer justify-center rounded-sm">
-                        <i className="mdi mdi-trash-can text-white text-[14px]"></i>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div> */}
+              {fields.map((field, index) => (
+                <TextField
+                  key={index}
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={(policeman as any)[field.name]}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  type={field.type}
+                  InputProps={{
+                    style: {
+                      height: "45px",
+                    },
+                  }}
+                />
+              ))}
               <Button
                 type="submit"
                 onClick={handleSubmit}
@@ -313,8 +147,4 @@ export default function Page() {
       </div>
     </div>
   );
-}
-
-function Toast(arg0: { type: string; message: string; }) {
-  throw new Error("Function not implemented.");
 }
