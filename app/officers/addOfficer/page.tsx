@@ -3,39 +3,47 @@ import React, { useState, ChangeEvent, MouseEvent } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
 import { TextField, Box, Button, Typography } from "@mui/material";
+import Image from "next/image";
+import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
-import apiClient from "@/app/api/apiClient";
-// interface Maintainer {
-//   id: number;
-//   badgeNumber: number;
-//   name: string;
-//   rank: string;
-//   position: string;
-//   department: string;
-//   status: string;
-//   doj: string; // date of joining
-//   number: number;
-// }
+import Toast from "../../components/utils/toaster";
 
-interface Maintainer {
+interface PoliceMan {
   email: string;
-  password: string;
-  nic: string;
-  policeBadgeNumber: string;
+  id: number;
+  badgeNumber: number;
+  name: string;
   rank: string;
+  position: string;  
   department: string;
+  doj: string; // date of joining
+  number: number;
 }
+
+const fields = [
+  { label: "Email", name: "email", type: "email" },
+  { label: "Name", name: "name", type: "text" },
+  { label: "Badge Number", name: "badgeNumber", type: "number" },
+  { label: "Rank", name: "rank", type: "text" },
+  { label: "Position", name: "position", type: "text" },
+  { label: "Department", name: "department", type: "text" },
+  { label: "Date of Joining", name: "doj", type: "date" },
+  { label: "Phone Number", name: "number", type: "number" },
+];
 
 export default function Page() {
   const { createPoliceOfficer } = useApiKeys();
   const [activeItem, setActiveItem] = useState("Police Officers");
-  const [maintainer, setMaintainer] = useState<Maintainer>({
-    email: '',
-    password: '',
-    nic: '',
-    policeBadgeNumber: '',
-    rank: '',
-    department: ''
+  const [policeman, setPoliceman] = useState<PoliceMan>({
+    email: "",
+    id: 0,
+    badgeNumber: 0,
+    name: "",
+    rank: "",
+    position: "",
+    department: "",
+    doj: "",
+    number: 0,
   });
 
   const [files, setFiles] = useState<File[]>([]);
@@ -47,29 +55,22 @@ export default function Page() {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setMaintainer({
-      ...maintainer,
+    setPoliceman({
+      ...policeman,
       [name]: value,
     });
   };
 
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    console.log("Creating police officer:", policeman);
     try {
-      console.log(maintainer);
-      const response = await apiClient.post(`/admin/createpolice`, maintainer);
-      console.log('Response Data:', response.data);
-      setMessage("Police officer added successfully");
-    } catch (error : any) {
-      if (error.response) {
-        console.error('Response Error:', error.response.data);
-        console.error('Response Status:', error.response.status);
-      } else if (error.request) {
-        console.error('Request Error:', error.request);
-      } else {
-        console.error('Error Message:', error.message);
-      }
-      setMessage("Failed to add police officer");
+      const response = await createPoliceOfficer(policeman);
+      Toast({ type: "success", message: "Police officer added successfully" });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      Toast({ type: "fail", message: "Failed to add police officer" });
     }
   };
 
@@ -109,63 +110,36 @@ export default function Page() {
             <h1 className="text-2xl font-bold text-secondaryTwo w-full text-left pl-10 mb-4">
               <b>Create Police Officer Account</b>
             </h1>
-            <Box component="form" noValidate autoComplete="off">
-              <TextField
-                fullWidth
-                label="Email"
-                variant="outlined"
-                name="email"
-                value={maintainer.email}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Password"
-                variant="outlined"
-                name="password"
-                value={maintainer.password}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="NIC"
-                variant="outlined"
-                name="nic"
-                value={maintainer.nic}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Police Badge Number"
-                variant="outlined"
-                name="policeBadgeNumber"
-                value={maintainer.policeBadgeNumber}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Rank"
-                variant="outlined"
-                name="rank"
-                value={maintainer.rank}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Department"
-                variant="outlined"
-                name="department"
-                value={maintainer.department}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <Button type="submit" onClick={handleSubmit} className="mt-4">
-                Create Police Officer
+            <Box
+              component="form"
+              className="w-4/5 h-full"
+              noValidate
+              autoComplete="off"
+            >
+              {fields.map((field, index) => (
+                <TextField
+                  key={index}
+                  fullWidth
+                  label={field.label}
+                  variant="outlined"
+                  name={field.name}
+                  value={(policeman as any)[field.name]}
+                  onChange={handleInputChange}
+                  margin="normal"
+                  type={field.type}
+                  InputProps={{
+                    style: {
+                      height: "45px",
+                    },
+                  }}
+                />
+              ))}
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                className="flex-none rounded-custom-3 bg-secondary hover:bg-secondaryTwo px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:scale-105 mt-8"
+              >
+                Create Account
               </Button>
               {message && <p>{message}</p>}
             </Box>
@@ -174,8 +148,4 @@ export default function Page() {
       </div>
     </div>
   );
-}
-
-function Toast(arg0: { type: string; message: string }) {
-  throw new Error("Function not implemented.");
 }
