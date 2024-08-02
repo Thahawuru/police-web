@@ -28,6 +28,17 @@ const menuItems = [
     ],
   },
   {
+    category: "Create Key",
+    items: [
+      {
+        title: "Create Key",
+        href: "/createKey",
+        icon: <BiGroup />,
+        badge: null,
+      },
+    ],
+  },
+  {
     category: "Police Officers",
     items: [
       {
