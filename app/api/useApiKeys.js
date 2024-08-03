@@ -11,14 +11,12 @@ export const useApiKeys = () => {
           console.log('data',data);
           const response = await apiClient.post(`/admin/createpolice`, {
             email: data.email,
-            Password:process.env.DEFAULT_PASSWORD,
-            id: data.id,
             badgeNumber: data.badgeNumber,
             name: data.name,
             rank: data.rank,
             position: data.position,
             department: data.department,
-            status: 1,
+            status: "active",
             doj: data.doj,
             number: data.number
           });
