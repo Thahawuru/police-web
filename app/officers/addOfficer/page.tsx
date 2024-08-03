@@ -10,7 +10,6 @@ import Toast from "../../components/utils/toaster";
 
 interface PoliceMan {
   email: string;
-  id: number;
   badgeNumber: number;
   name: string;
   rank: string;
@@ -36,7 +35,6 @@ export default function Page() {
   const [activeItem, setActiveItem] = useState("Police Officers");
   const [policeman, setPoliceman] = useState<PoliceMan>({
     email: "",
-    id: 0,
     badgeNumber: 0,
     name: "",
     rank: "",
