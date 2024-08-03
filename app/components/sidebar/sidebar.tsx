@@ -60,17 +60,17 @@ const menuItems = [
       },
     ],
   },
-  {
-    category: "Settings",
-    items: [
-      {
-        title: "Settings",
-        href: "/admin/settings",
-        icon: <BiCog />,
-        badge: null,
-      },
-    ],
-  },
+  // {
+  //   category: "Settings",
+  //   items: [
+  //     {
+  //       title: "Settings",
+  //       href: "/admin/settings",
+  //       icon: <BiCog />,
+  //       badge: null,
+  //     },
+  //   ],
+  // },
   {
     category: "Logout",
     items: [
