@@ -26,7 +26,7 @@ export default function Page() {
   const [maintainer, setMaintainer] = useState<Maintainer>({
     id: 1,
     name: 'diniru',
-    dob: '2001-9-9',
+    dob: '2001-09-09',
     gender: "male",
     nic: 200117710551,
     reasonForBeingWanted: 'murder',
