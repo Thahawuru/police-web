@@ -10,24 +10,30 @@ import Toast from "../../components/utils/toaster";
 
 interface PoliceMan {
   email: string;
-  badgeNumber: number;
+  badgeNumber: string;
   name: string;
+  password: string;
+  nic: string;
   rank: string;
   position: string;  
   department: string;
   doj: string; // date of joining
-  number: number;
+  status: string;
+  photo: string;
 }
 
 const fields = [
   { label: "Email", name: "email", type: "email" },
   { label: "Name", name: "name", type: "text" },
-  { label: "Badge Number", name: "badgeNumber", type: "number" },
+  { label: "Password", name: "password", type: "password" },
+  { label: "NIC", name: "nic", type: "text" },
+  { label: "Badge Number", name: "badgeNumber", type: "text" },
   { label: "Rank", name: "rank", type: "text" },
   { label: "Position", name: "position", type: "text" },
   { label: "Department", name: "department", type: "text" },
   { label: "Date of Joining", name: "doj", type: "date" },
-  { label: "Phone Number", name: "number", type: "number" },
+  { label: "Status", name: "status", type: "text" },
+  { label: "Photo URL", name: "photo", type: "text" },
 ];
 
 export default function Page() {
@@ -35,13 +41,16 @@ export default function Page() {
   const [activeItem, setActiveItem] = useState("Police Officers");
   const [policeman, setPoliceman] = useState<PoliceMan>({
     email: "",
-    badgeNumber: 0,
+    badgeNumber: "",
     name: "",
+    password: "",
+    nic: "",
     rank: "",
     position: "",
     department: "",
     doj: "",
-    number: 0,
+    status: "Active",
+    photo: "",
   });
 
   const [files, setFiles] = useState<File[]>([]);
@@ -135,7 +144,7 @@ export default function Page() {
               <Button
                 type="submit"
                 onClick={handleSubmit}
-                className="flex-none rounded-custom-3 bg-secondary hover:bg-secondaryTwo px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:scale-105 mt-8"
+                className="flex-none rounded-custom-3 bg-secondaryTwo hover:bg-secondaryTwo px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:scale-105 mt-8"
               >
                 Create Account
               </Button>
