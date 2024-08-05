@@ -148,6 +148,7 @@ export default function Page() {
               >
                 Create Account
               </Button>
+              {message && <p>{message}</p>}
             </Box>
           </Box>
         </div>
