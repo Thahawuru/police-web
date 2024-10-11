@@ -286,7 +286,7 @@ export default function Page() {
                     <div key={key} className="w-full h-16 flex items-center justify-between rounded p-3 bg-white">
                       <div className="flex flex-row items-center gap-2">
                         <div className="h-12 w-12">
-                          <img className="w-full h-full rounded" src={URL.createObjectURL(file)} alt={file.name} />
+                          <Image className="w-full h-full rounded" src={URL.createObjectURL(file)} alt={file.name} />
                         </div>
                         <span className="truncate w-44">{file.name}</span>
                       </div>
