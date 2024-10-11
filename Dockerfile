@@ -16,12 +16,15 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Use a lightweight web server to serve the app
-FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
+# Run the Next.js server
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY --from=build /app ./
 
 # Expose the web server's port
-EXPOSE 3000
+EXPOSE 3001
 
-# Start the web server
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Next.js server
+CMD ["npm", "start"]
