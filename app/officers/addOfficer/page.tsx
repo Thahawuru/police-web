@@ -7,6 +7,7 @@ import Image from "next/image";
 import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
 import Toast from "../../components/utils/toaster";
+import Link from "next/link";
 
 interface PoliceMan {
   email: string;
@@ -50,7 +51,7 @@ export default function Page() {
     department: "",
     doj: "",
     status: "Active",
-    photo: "",
+    photo: "photo",
   });
 
   const [files, setFiles] = useState<File[]>([]);
@@ -101,7 +102,20 @@ export default function Page() {
   const removeImage = (fileName: string) => {
     setFiles(files.filter((file) => file.name !== fileName));
   };
-
+ // Breadcrumbs Component
+ function BasicBreadcrumbs() {
+  return (
+    <div className="text-2xl font-bold text-secondaryTwo w-full text-left pl-10 mb-4">
+      <Link href="/officers" className="text-secondaryTwo text-sm font-semibold">
+      View Officers/
+      </Link>
+      <Link href="" className="text-secondaryTwo text-sm font-semibold">
+      Add Officers
+      </Link>
+    </div>
+    
+  );
+}
   return (
     <div className="w-full bg-white h-auto flex flex-row ">
       <div className="h-screen flex flex-col justify-between items-center">
@@ -113,7 +127,8 @@ export default function Page() {
       <div className="flex flex-col w-5/6 ml-[250px]">
         <Welcome />
         <div className="flex flex-col justify-center items-center w-full h-min p-4 mt-20">
-          <Box className="w-full flex flex-col justify-between items-center">
+          <Box className="w-full flex flex-col justify-center items-center">
+            <BasicBreadcrumbs />
             <h1 className="text-2xl font-bold text-secondaryTwo w-full text-left pl-10 mb-4">
               <b>Create Police Officer Account</b>
             </h1>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent, MouseEvent } from "react";
+import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import Sidebar from "../components/sidebar/sidebar";
 import Welcome from "../components/navbar/navbar";
 import Link from "next/link";
@@ -18,7 +18,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import BlockIcon from "@mui/icons-material/Block";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { useRouter } from 'next/router';
+import { useApiKeys } from "../api/useApiKeys";
 
 interface Maintainer {
   id: number;
@@ -45,16 +45,45 @@ const initialMaintainers: Maintainer[] = [
 ];
 
 export default function Page() {
-  const [activeItem, setActiveItem] = useState("Police Officers");
-
-  const handleSetActiveItem = (itemTitle: any) => {
-    setActiveItem(itemTitle);
-  };
-
   const [maintainers, setMaintainers] = useState<Maintainer[]>(initialMaintainers);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeItem, setActiveItem] = useState("Police Officers");
+  const { fetchAllPoliceOfficers } = useApiKeys();
+  const handleSetActiveItem = (itemTitle: any) => {
+    setActiveItem(itemTitle);
+  };
+
+  useEffect(() => {
+    const fetchOfficers = async () => {
+      const res = await fetchAllPoliceOfficers();
+      console.log('all police officers', res);
+
+      const fetchedMaintainers = res.map((officer: { 
+        policeId: number;
+        policeBadgeNumber: number;
+        nic: string;
+        rank: string; 
+        position: string; 
+        department: string; 
+        status: string; 
+        doj: string; 
+      }) => ({
+        id: officer.policeId,
+        badgeNumber: officer.policeBadgeNumber,
+        name: officer.nic,
+        rank: officer.rank,
+        position: officer.position,
+        department: officer.department,
+        status: officer.status,
+        doj: officer.doj,
+      }));
+
+      setMaintainers(fetchedMaintainers);
+    };
+    fetchOfficers();
+  }, []); 
 
   const handleDelete = (id: number): void => {
     setMaintainers(maintainers.filter((maintainer) => maintainer.id !== id));
@@ -107,8 +136,11 @@ export default function Page() {
       </div>
       <div className="flex flex-col w-5/6 ml-[250px]">
         <Welcome />
+        {/* Add Breadcrumbs here */}
+        
         <div className="flex flex-row w-full h-min p-4 mt-20">
-          <div className="flex flex-row justify-start items-center w-2/3">
+          <div className="flex flex-col justify-start w-2/3">
+            {/* <BasicBreadcrumbs /> */}
             <h1 className="text-2xl font-bold text-secondaryTwo w-full text-left pl-10">
               <b>Existing Accounts</b>
             </h1>
