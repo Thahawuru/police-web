@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent, MouseEvent } from "react";
+import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
 import { TextField, Box, Button, Typography } from "@mui/material";
@@ -8,6 +8,7 @@ import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
 import Toast from "../../components/utils/toaster";
 import Link from "next/link";
+import { connectWebSocket, sendMessage, disconnectWebSocket } from '../../api/websocket';
 
 interface PoliceMan {
   email: string;
@@ -70,10 +71,23 @@ export default function Page() {
     });
   };
 
+  const [notifications, setNotifications] = useState<any[]>([]);
+  // const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        connectWebSocket((newMessage: any) => {
+            setNotifications((prevNotifications) => [...prevNotifications, newMessage]);
+        });
+
+        return () => {
+            disconnectWebSocket();
+        };
+    }, []);
+  
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     fields.forEach((field) => {
-      if (field.required && !policeman[field.name]) {
+      if (field.required && !(policeman as any)[field.name]) {
         newErrors[field.name] = `${field.label} is required`;
       }
       if (field.name === "email" && policeman.email && !/\S+@\S+\.\S+/.test(policeman.email)) {
@@ -99,6 +113,13 @@ export default function Page() {
       const response = await createPoliceOfficer(policeman);
       Toast({ type: "success", message: "Police officer added successfully" });
       console.log(response);
+      // Clear previous notifications if desired
+    setNotifications([]);
+    
+    // Connect WebSocket after form submission
+    connectWebSocket((newMessage: any) => {
+      setNotifications((prevNotifications) => [...prevNotifications, newMessage]);
+    });
     } catch (error) {
       console.log(error);
       Toast({ type: "fail", message: "Failed to add police officer" });
