@@ -8,7 +8,7 @@ import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
 import Toast from "../../components/utils/toaster";
 import Link from "next/link";
-import { connectWebSocket, sendMessage, disconnectWebSocket } from '../../api/websocket';
+import { connectWebSocket, disconnectWebSocket } from '../../api/websocket';
 
 interface PoliceMan {
   email: string;
@@ -71,19 +71,35 @@ export default function Page() {
     });
   };
 
-  const [notifications, setNotifications] = useState<any[]>([]);
-  // const [message, setMessage] = useState('');
+  const [notifications, setNotifications] = useState<any>("");
 
-    useEffect(() => {
-        connectWebSocket((newMessage: any) => {
-            setNotifications((prevNotifications) => [...prevNotifications, newMessage]);
-        });
+  useEffect(() => {
+    let isConnected = false;
+    if(!isConnected) {
+    connectWebSocket((newMessage: any) => {
+        console.log('New Message:', newMessage);
+        setNotifications(newMessage); // Setting the new message
+    });
+    isConnected = true;
+  }
 
-        return () => {
-            disconnectWebSocket();
-        };
-    }, []);
-  
+    return () => {
+        disconnectWebSocket();
+        isConnected = false;
+    };
+}, []);
+
+useEffect(() => {
+  console.log('Notifications:', notifications);
+  if (notifications.toLowerCase().includes("failure")) {
+    Toast({ type: "fail", message: notifications });
+  } else if (notifications.toLowerCase().includes("success")) {
+    Toast({ type: "success", message: notifications });
+  } else {
+    Toast({ type: "info", message: notifications }); // Optional: handle other cases
+  }
+}, [notifications]);
+
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     fields.forEach((field) => {
@@ -101,6 +117,7 @@ export default function Page() {
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!validate()) {
@@ -111,41 +128,32 @@ export default function Page() {
     console.log("Creating police officer:", policeman);
     try {
       const response = await createPoliceOfficer(policeman);
-      Toast({ type: "success", message: "Police officer added successfully" });
-      console.log(response);
-      // Clear previous notifications if desired
-    setNotifications([]);
-    
-    // Connect WebSocket after form submission
-    connectWebSocket((newMessage: any) => {
-      setNotifications((prevNotifications) => [...prevNotifications, newMessage]);
-    });
-    } catch (error) {
-      console.log(error);
-      Toast({ type: "fail", message: "Failed to add police officer" });
-    }
-  };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setMessage("");
-    const selectedFiles = e.target.files;
-    if (selectedFiles) {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
-        const fileType = file.type;
-        const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
-        if (validImageTypes.includes(fileType)) {
-          setFiles((prevFiles) => [...prevFiles, file]);
-        } else {
-          setMessage("Only images are accepted");
-        }
+      console.log("Response:", response);
+      } catch (error) {
+        console.log(error);
       }
-    }
   };
 
-  const removeImage = (fileName: string) => {
-    setFiles(files.filter((file) => file.name !== fileName));
-  };
+  // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setMessage("");
+  //   const selectedFiles = e.target.files;
+  //   if (selectedFiles) {
+  //     for (let i = 0; i < selectedFiles.length; i++) {
+  //       const file = selectedFiles[i];
+  //       const fileType = file.type;
+  //       const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+  //       if (validImageTypes.includes(fileType)) {
+  //         setFiles((prevFiles) => [...prevFiles, file]);
+  //       } else {
+  //         setMessage("Only images are accepted");
+  //       }
+  //     }
+  //   }
+  // };
+
+  // const removeImage = (fileName: string) => {
+  //   setFiles(files.filter((file) => file.name !== fileName));
+  // };
 
   // Breadcrumbs Component
   function BasicBreadcrumbs() {

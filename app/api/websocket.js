@@ -38,14 +38,14 @@ export function connectWebSocket(onMessageReceived) {
     window.addEventListener('beforeunload', () => stompClient.deactivate());
 }
 
-export function sendMessage(message) {
-    if (stompClient) {
-        stompClient.publish({
-            destination: '/app/sendMessage',
-            body: message,
-        });
-    }
-}
+// export function sendMessage(message) {
+//     if (stompClient) {
+//         stompClient.publish({
+//             destination: '/app/sendMessage',
+//             body: message,
+//         });
+//     }
+// }
 
 export function disconnectWebSocket() {
     if (stompClient) {
