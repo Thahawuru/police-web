@@ -55,6 +55,20 @@ export default function Page() {
     setActiveItem(itemTitle);
   };
 
+
+// useEffect(() => {
+//   console.log('Notifications:', notifications);
+//   if (notifications.toLowerCase().includes("failure")) {
+//     Toast({ type: "fail", message: notifications });
+//   } else if (notifications.toLowerCase().includes("success")) {
+//     Toast({ type: "success", message: notifications });
+//   } else {
+//     Toast({ type: "info", message: notifications }); // Optional: handle other cases
+//   }
+// }, [notifications]);
+
+  const {deletePoliceOfficer} = useApiKeys();
+
   useEffect(() => {
     const fetchOfficers = async () => {
       const res = await fetchAllPoliceOfficers();
@@ -86,7 +100,7 @@ export default function Page() {
   }, []); 
 
   const handleDelete = (id: number): void => {
-    setMaintainers(maintainers.filter((maintainer) => maintainer.id !== id));
+    deletePoliceOfficer(id);
   };
 
   const handleRevoke = (id: number): void => {

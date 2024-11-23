@@ -1,12 +1,11 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-let stompClient = null;
-
+let stompClient;
 export function connectWebSocket(onMessageReceived) {
     const socket = new SockJS('http://localhost:8081/ws');  
 
-    const stompClient = new Client({
+     stompClient = new Client({
         webSocketFactory: () => socket,
         reconnectDelay: 5000,
         debug: (str) => console.log(str),
@@ -48,7 +47,9 @@ export function connectWebSocket(onMessageReceived) {
 // }
 
 export function disconnectWebSocket() {
+    console.log('disconnect WebSocket func called');
     if (stompClient) {
         stompClient.deactivate();
+        console.log('WebSocket disconnected');
     }
 }

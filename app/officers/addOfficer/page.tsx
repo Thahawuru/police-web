@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
+import React, {useState, ChangeEvent, MouseEvent, useEffect, useContext} from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
 import { TextField, Box, Button, Typography } from "@mui/material";
@@ -9,6 +9,7 @@ import { useApiKeys } from "../../api/useApiKeys";
 import Toast from "../../components/utils/toaster";
 import Link from "next/link";
 import { connectWebSocket, disconnectWebSocket } from '../../api/websocket';
+import WebSocketContext from "@/app/context/WebSocketContex";
 
 interface PoliceMan {
   email: string;
@@ -17,7 +18,7 @@ interface PoliceMan {
   password: string;
   nic: string;
   rank: string;
-  position: string;  
+  position: string;
   department: string;
   doj: string; // date of joining
   status: string;
@@ -71,34 +72,25 @@ export default function Page() {
     });
   };
 
-  const [notifications, setNotifications] = useState<any>("");
-
+  // @ts-ignore
+  const {notifications} = useContext(WebSocketContext);
   useEffect(() => {
-    let isConnected = false;
-    if(!isConnected) {
-    connectWebSocket((newMessage: any) => {
-        console.log('New Message:', newMessage);
-        setNotifications(newMessage); // Setting the new message
-    });
-    isConnected = true;
-  }
+    console.log("Add OFFICER NOTIFICATION:", notifications);
+  }, [notifications]);
 
-    return () => {
-        disconnectWebSocket();
-        isConnected = false;
-    };
-}, []);
-
-useEffect(() => {
-  console.log('Notifications:', notifications);
-  if (notifications.toLowerCase().includes("failure")) {
-    Toast({ type: "fail", message: notifications });
-  } else if (notifications.toLowerCase().includes("success")) {
-    Toast({ type: "success", message: notifications });
-  } else {
-    Toast({ type: "info", message: notifications }); // Optional: handle other cases
-  }
-}, [notifications]);
+  // useEffect(() => {
+  //   console.log('Notifications:', notifications);
+  //   // @ts-ignore
+  //   if (notifications.toLowerCase().includes("failure")) {
+  //     Toast({ type: "fail", message: notifications });
+  //   } else { // @ts-ignore
+  //     if (notifications.toLowerCase().includes("success")) {
+  //           Toast({ type: "success", message: notifications });
+  //         } else {
+  //           Toast({ type: "info", message: notifications }); // Optional: handle other cases
+  //         }
+  //   }
+  // }, [notifications]);
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};

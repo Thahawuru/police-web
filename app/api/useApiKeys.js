@@ -16,7 +16,7 @@ export const useApiKeys = () => {
             position: data.position,
             department: data.department,
             dateOfJoining: data.doj,
-            status: "active",
+            status: "Active",
             photo: data.photo
           });
 
@@ -41,9 +41,22 @@ export const useApiKeys = () => {
         }
     };
 
+    const deletePoliceOfficer = async (id) => {
+      try{
+        console.log("Police Officer ID:", id);
+        const response = await apiClient.delete(`/police/delete/${id}`);
+        console.log("Police Officer Deleted:", response);
+
+      }catch(error){
+        console.log("Police Officer Delete error",error)
+        throw new Error(error);
+      }
+    };
+
     return{
         createPoliceOfficer,
-        fetchAllPoliceOfficers
+        fetchAllPoliceOfficers,
+        deletePoliceOfficer
     };
 
 };

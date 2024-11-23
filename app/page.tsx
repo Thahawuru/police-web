@@ -13,8 +13,28 @@ import {
 import DateTimeXAxis from "./charts/DateTimeXAxis";
 import LineColumnChart from "./charts/LineColumnChart";
 import PieChart from "./charts/PieChart";
+import { useEffect } from "react";
+import { connectWebSocket ,disconnectWebSocket} from "./api/websocket";
 
 function Home() {
+
+  const [notifications, setNotifications] = useState<any>("");
+
+  useEffect(() => {
+    let isConnected = false;
+    if(!isConnected) {
+    connectWebSocket((newMessage: any) => {
+        console.log('New Message:', newMessage);
+        setNotifications(newMessage); // Setting the new message
+    });
+    isConnected = true;
+  }
+
+    // return () => {
+    //     disconnectWebSocket();
+    //     isConnected = false;
+    // };
+}, []);
 
   const [activeItem,setActiveItem] = useState("Dashboard");
 
