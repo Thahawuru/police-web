@@ -27,6 +27,28 @@ export const useApiKeys = () => {
         }
     };
 
+    const createWantedPerson = async (data) => {
+        try{
+            const response = await apiClient.post(`/wantedPerson/createWantedPerson`, {
+                name: data.name,
+                dob: data.dob,
+                gender: data.gender,
+                nic: data.nic,
+                reasonForBeingWanted: data.reasonForBeingWanted,
+                color: data.color,
+                height: data.height,
+                bodyType: data.bodyType,
+                otherInfo: data.otherInfo,
+                status: data.status,
+                photo: data.photo,
+            });
+            console.log("THis is the response",response);
+        }catch(error){
+            console.log(error);
+            throw new Error(error);
+        }
+    }
+
     const fetchAllPoliceOfficers = async () => {
         try {
           const response = await apiClient.get(`/police`);
@@ -40,6 +62,18 @@ export const useApiKeys = () => {
           throw new Error(error);
         }
     };
+
+    const fetchAllWantedPersons = async () => {
+        try{
+            const response = await apiClient.get(`/wantedPerson`);
+            const wantedPersonData = response.data.data;
+            console.log("Wanted Data:", wantedPersonData);
+            return wantedPersonData;
+        }catch(e){
+            console.log("This is the error",e);
+            throw new Error(e);
+        }
+    }
 
     const deletePoliceOfficer = async (id) => {
       try{
@@ -55,7 +89,9 @@ export const useApiKeys = () => {
 
     return{
         createPoliceOfficer,
+        createWantedPerson,
         fetchAllPoliceOfficers,
+        fetchAllWantedPersons,
         deletePoliceOfficer
     };
 
