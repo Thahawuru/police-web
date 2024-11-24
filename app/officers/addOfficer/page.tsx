@@ -16,7 +16,7 @@ interface PoliceMan {
   badgeNumber: string;
   name: string;
   password: string;
-  nic: string;
+  NIC: string; // Changed to NIC
   rank: string;
   position: string;
   department: string;
@@ -47,7 +47,7 @@ export default function Page() {
     badgeNumber: "",
     name: "",
     password: "",
-    nic: "",
+    NIC: "",
     rank: "",
     position: "",
     department: "",
@@ -66,10 +66,10 @@ export default function Page() {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setPoliceman({
-      ...policeman,
-      [name]: value,
-    });
+    setPoliceman((prevPoliceman) => ({
+      ...prevPoliceman,
+      [name === "nic" ? "NIC" : name]: value, // Map nic to NIC
+    }));
   };
 
   // @ts-ignore
