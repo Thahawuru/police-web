@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google"
 import './globals.css'
 import { Toaster } from "sonner";
+import WebSocketContextProvider from "@/app/context/WebSocketContextProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -24,8 +25,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <link rel="icon" href={logo.src} />
       </head>
       <body className={inter.className}>
+      <WebSocketContextProvider>
         <main>{children}</main>
         <Toaster />
+      </WebSocketContextProvider>
       </body>
     </html>
   );

@@ -1,8 +1,5 @@
 import axios from "axios";
 import apiClient from "./apiClient";
-import Toast from "../components/utils/toaster";
-import dotenv from 'dotenv';
-import { Password } from "@mui/icons-material";
 
 export const useApiKeys = () => {
     const createPoliceOfficer = async (data) => {
@@ -10,34 +7,56 @@ export const useApiKeys = () => {
         try {
           console.log('data',data);
           const response = await apiClient.post(`/admin/createpolice`, {
-            email: data.email,
-            badgeNumber: data.badgeNumber,
             name: data.name,
+            email: data.email,
+            password: data.password,
+            nic: data.nic,
+            policeBadgeNumber: data.badgeNumber,
             rank: data.rank,
             position: data.position,
             department: data.department,
-            status: "active",
-            doj: data.doj,
-            number: data.number
+            dateOfJoining: data.doj,
+            status: "Active",
+            photo: data.photo
           });
 
           console.log("THis is the response",response);
-          // try {
-          //   const responseData = JSON.parse(response.data);
-          //   console.log('Response Data:', responseData);
-          //   return responseData;
-          // } catch (jsonError) {
-          //   console.error('Response is not valid JSON:', response.data);
-          //   throw new Error('Invalid JSON response');
-          // }
-          // return response;
         } catch (error) {
-          console.log("Thisi is the error",error)
+          console.log("This is the error",error)
           throw new Error(error);
         }
-      };
+    };
 
-      return{
-        createPoliceOfficer
-      };
+    const fetchAllPoliceOfficers = async () => {
+        try {
+          const response = await apiClient.get(`/police`);
+
+          const policeOfficersData = response.data.data;
+          console.log("Police Officers Data:", policeOfficersData);
+
+          return policeOfficersData;
+        } catch (error) {
+          console.log("Police Officer Fetch error",error)
+          throw new Error(error);
+        }
+    };
+
+    const deletePoliceOfficer = async (id) => {
+      try{
+        console.log("Police Officer ID:", id);
+        const response = await apiClient.delete(`/police/delete/${id}`);
+        console.log("Police Officer Deleted:", response);
+
+      }catch(error){
+        console.log("Police Officer Delete error",error)
+        throw new Error(error);
+      }
+    };
+
+    return{
+        createPoliceOfficer,
+        fetchAllPoliceOfficers,
+        deletePoliceOfficer
+    };
+
 };
