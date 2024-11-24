@@ -11,10 +11,6 @@ import {
 } from "react-icons/bi";
 import dynamic from "next/dynamic"; // Import dynamic
 
-
-import DateTimeXAxis from "./charts/DateTimeXAxis";
-import LineColumnChart from "./charts/LineColumnChart";
-import PieChart from "./charts/PieChart";
 import { useEffect } from "react";
 import { connectWebSocket ,disconnectWebSocket} from "./api/websocket";
 // Use dynamic import for components that require client-side rendering
@@ -48,14 +44,9 @@ function Home() {
     // };
 }, []);
 
-  const [activeItem,setActiveItem] = useState("Dashboard");
-
   const handleSetActiveItem = (itemTitle: any)=>{
       setActiveItem(itemTitle);
   }
-  const handleSetActiveItem = (itemTitle: any) => {
-    setActiveItem(itemTitle);
-  };
 
   return (
     <div className="w-full bg-white min-h-screen h-auto flex flex-row items-end justify-center">
