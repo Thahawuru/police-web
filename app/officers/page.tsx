@@ -55,18 +55,6 @@ export default function Page() {
     setActiveItem(itemTitle);
   };
 
-
-// useEffect(() => {
-//   console.log('Notifications:', notifications);
-//   if (notifications.toLowerCase().includes("failure")) {
-//     Toast({ type: "fail", message: notifications });
-//   } else if (notifications.toLowerCase().includes("success")) {
-//     Toast({ type: "success", message: notifications });
-//   } else {
-//     Toast({ type: "info", message: notifications }); // Optional: handle other cases
-//   }
-// }, [notifications]);
-
   const {deletePoliceOfficer} = useApiKeys();
 
   const fetchOfficers = async () => {
@@ -102,8 +90,8 @@ export default function Page() {
 
   const handleDelete = async (id: number) => {
     try {
-      await deletePoliceOfficer(id); // Delete the officer via API
-      await fetchOfficers(); // Refresh the list
+      await deletePoliceOfficer(id);
+      await fetchOfficers();
     } catch (error) {
       console.error("Error deleting officer:", error);
     }
