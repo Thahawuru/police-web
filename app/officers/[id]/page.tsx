@@ -1,36 +1,69 @@
 "use client";
-import React, { useState, ChangeEvent, MouseEvent } from "react";
+import React, { useState, ChangeEvent, MouseEvent , useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import Image from 'next/image';
 import profileAvatar from '../../../public/7309667.jpg'
+import { useApiKeys } from "../../api/useApiKeys";
+import { useSearchParams } from "next/navigation";
+import { strict } from "assert";
 
 interface Maintainer {
-  id: number;
-  badgeNumber: number;
+  id: string;
+  badgeNumber: string;
   name: string;
   rank: string;
   position: string;
   department: string;
   status: string;
   doj: string; // date of joining
-  number: number;
+  number: string;
 }
 
 export default function Page() {
+  const { fetchOffcierDetails } = useApiKeys();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = window.location.pathname;
+      const id = url.split("/").pop();
+      officerDetails(id);
+    }
+  }, []);
+
   const [activeItem, setActiveItem] = useState("Police Officers");
   const [maintainer, setMaintainer] = useState<Maintainer>({
-    id: 1,
-  badgeNumber: 2,
+    id: '',
+  badgeNumber: '',
   name: '',
   rank: '',
   position: '',
   department: '',
   status: '',
   doj: '', // date of joining
-  number: +94,
+  number: '',
   });
+
+  const officerDetails = async (id: string | undefined) => {
+    if (!id) return;
+    const res = await fetchOffcierDetails(id);
+    console.log(res);
+
+    if (res) {
+      setMaintainer({
+        id: res.policeId,
+        badgeNumber: res.policeBadgeNumber,
+        name: res.nic,
+        rank: res.rank,
+        position: res.position,
+        department: res.department,
+        status: res.status,
+        doj: res.doj,
+        number: res.number,
+      });
+  }
+  };
 
   const handleSetActiveItem = (itemTitle: string) => {
     setActiveItem(itemTitle);

@@ -1,17 +1,18 @@
 "use client";
-import React, { useState, ChangeEvent, MouseEvent } from "react";
+import React, { useState, ChangeEvent, MouseEvent, useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import Image from 'next/image';
 import profileAvatar from '../../../public/7309667.jpg'
+import { useApiKeys } from "../../api/useApiKeys";
 
 interface Maintainer {
-  id: number;
+  id: string;
   name: string;
   dob: string;
   gender: string;
-  nic: number;
+  nic: string;
   reasonForBeingWanted: string;
   color: string;
   height: string;
@@ -22,21 +23,53 @@ interface Maintainer {
 }
 
 export default function Page() {
+  const { fetchWantedPersonDetails } = useApiKeys();
   const [activeItem, setActiveItem] = useState("Wanted Persons");
   const [maintainer, setMaintainer] = useState<Maintainer>({
-    id: 1,
-    name: 'diniru',
-    dob: '2001-09-09',
-    gender: "male",
-    nic: 200117710551,
-    reasonForBeingWanted: 'murder',
-    color: 'black',
-    height: '6ft',
-    bodyType:'body builder',
-    otherInfo:'fucking idiot' ,
-    status: 'active',
+    id: '',
+    name: '',
+    dob: '',
+    gender: '',
+    nic: '',
+    reasonForBeingWanted: '',
+    color: '',
+    height: '',
+    bodyType:'',
+    otherInfo:'' ,
+    status: '',
     photo: '',
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = window.location.pathname;
+      const id = url.split("/").pop();
+      wantedPersonDetails(id);
+    }
+  }, []);
+
+  const wantedPersonDetails = async (id: string | undefined) => {
+    if (!id) return;
+    const res = await fetchWantedPersonDetails(id);
+    console.log(res);
+
+    if (res) {
+      setMaintainer({
+        id: res.id,
+        name: res.name,
+        dob: res.dob,
+        gender: res.gender,
+        nic: res.nic,
+        reasonForBeingWanted: res.reasonForBeingWanted,
+        color: res.color,
+        height: res.height,
+        bodyType: res.bodyType,
+        otherInfo: res.otherInfo,
+        status: res.status,
+        photo: res.photo,
+      });
+  }
+};
 
   const handleSetActiveItem = (itemTitle: string) => {
     setActiveItem(itemTitle);

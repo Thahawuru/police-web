@@ -87,12 +87,39 @@ export const useApiKeys = () => {
       }
     };
 
+    const fetchOffcierDetails = async (id) => {
+        try{
+          console.log("Police Officer ID:", id);
+            const response = await apiClient.get(`/police/${id}`);
+            console.log("Officer Details:", response);
+            return response.data.data;
+        }catch(e){
+            console.log("This is the error",e);
+            throw new Error(e);
+        }
+    };
+
+    const fetchWantedPersonDetails = async (id) => {
+      try{
+        console.log(" Wperson ID:", id);
+          const response = await apiClient.get(`/wantedPerson/${id}`);
+          console.log("Wperson Details:", response);
+          return response.data.data;
+      }catch(e){
+          console.log("This is the error",e);
+          throw new Error(e);
+      }
+  };
+
+
     return{
         createPoliceOfficer,
         createWantedPerson,
         fetchAllPoliceOfficers,
         fetchAllWantedPersons,
-        deletePoliceOfficer
+        deletePoliceOfficer,
+        fetchOffcierDetails,
+        fetchWantedPersonDetails
     };
 
 };

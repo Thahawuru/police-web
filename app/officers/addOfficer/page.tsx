@@ -8,7 +8,6 @@ import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
 import Toast from "../../components/utils/toaster";
 import Link from "next/link";
-import WebSocketContext from "@/app/context/WebSocketContex";
 
 interface PoliceMan {
   email: string;
@@ -71,26 +70,6 @@ export default function Page() {
     });
   };
 
-  // @ts-ignore
-  const {notifications} = useContext(WebSocketContext);
-  useEffect(() => {
-    console.log("Add OFFICER NOTIFICATION:", notifications);
-  }, [notifications]);
-
-  // useEffect(() => {
-  //   console.log('Notifications:', notifications);
-  //   // @ts-ignore
-  //   if (notifications.toLowerCase().includes("failure")) {
-  //     Toast({ type: "fail", message: notifications });
-  //   } else { // @ts-ignore
-  //     if (notifications.toLowerCase().includes("success")) {
-  //           Toast({ type: "success", message: notifications });
-  //         } else {
-  //           Toast({ type: "info", message: notifications }); // Optional: handle other cases
-  //         }
-  //   }
-  // }, [notifications]);
-
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     fields.forEach((field) => {
@@ -124,27 +103,6 @@ export default function Page() {
         console.log(error);
       }
   };
-
-  // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setMessage("");
-  //   const selectedFiles = e.target.files;
-  //   if (selectedFiles) {
-  //     for (let i = 0; i < selectedFiles.length; i++) {
-  //       const file = selectedFiles[i];
-  //       const fileType = file.type;
-  //       const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
-  //       if (validImageTypes.includes(fileType)) {
-  //         setFiles((prevFiles) => [...prevFiles, file]);
-  //       } else {
-  //         setMessage("Only images are accepted");
-  //       }
-  //     }
-  //   }
-  // };
-
-  // const removeImage = (fileName: string) => {
-  //   setFiles(files.filter((file) => file.name !== fileName));
-  // };
 
   // Breadcrumbs Component
   function BasicBreadcrumbs() {
