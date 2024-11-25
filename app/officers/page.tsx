@@ -55,52 +55,46 @@ export default function Page() {
     setActiveItem(itemTitle);
   };
 
-
-// useEffect(() => {
-//   console.log('Notifications:', notifications);
-//   if (notifications.toLowerCase().includes("failure")) {
-//     Toast({ type: "fail", message: notifications });
-//   } else if (notifications.toLowerCase().includes("success")) {
-//     Toast({ type: "success", message: notifications });
-//   } else {
-//     Toast({ type: "info", message: notifications }); // Optional: handle other cases
-//   }
-// }, [notifications]);
-
   const {deletePoliceOfficer} = useApiKeys();
 
+  const fetchOfficers = async () => {
+    const res = await fetchAllPoliceOfficers();
+    console.log('all police officers', res);
+
+    const fetchedMaintainers = res.map((officer: {
+      policeId: number;
+      policeBadgeNumber: number;
+      nic: string;
+      rank: string;
+      position: string;
+      department: string;
+      status: string;
+      doj: string;
+    }) => ({
+      id: officer.policeId,
+      badgeNumber: officer.policeBadgeNumber,
+      name: officer.nic,
+      rank: officer.rank,
+      position: officer.position,
+      department: officer.department,
+      status: officer.status,
+      doj: officer.doj,
+    }));
+
+    setMaintainers(fetchedMaintainers);
+  };
+
   useEffect(() => {
-    const fetchOfficers = async () => {
-      const res = await fetchAllPoliceOfficers();
-      console.log('all police officers', res);
-
-      const fetchedMaintainers = res.map((officer: { 
-        policeId: number;
-        policeBadgeNumber: number;
-        nic: string;
-        rank: string; 
-        position: string; 
-        department: string; 
-        status: string; 
-        doj: string; 
-      }) => ({
-        id: officer.policeId,
-        badgeNumber: officer.policeBadgeNumber,
-        name: officer.nic,
-        rank: officer.rank,
-        position: officer.position,
-        department: officer.department,
-        status: officer.status,
-        doj: officer.doj,
-      }));
-
-      setMaintainers(fetchedMaintainers);
-    };
     fetchOfficers();
-  }, []); 
+  }, []);
 
-  const handleDelete = (id: number): void => {
-    deletePoliceOfficer(id);
+  const handleDelete = async (id: number) => {
+    try {
+      await deletePoliceOfficer(id);
+      await fetchOfficers();
+    } catch (error) {
+      console.error("Error deleting officer:", error);
+    }
   };
 
   const handleRevoke = (id: number): void => {
@@ -151,7 +145,7 @@ export default function Page() {
       <div className="flex flex-col w-5/6 ml-[250px]">
         <Welcome />
         {/* Add Breadcrumbs here */}
-        
+
         <div className="flex flex-row w-full h-min p-4 mt-20">
           <div className="flex flex-col justify-start w-2/3">
             {/* <BasicBreadcrumbs /> */}
@@ -227,7 +221,7 @@ export default function Page() {
                                 <VisibilityIcon />
                                 </IconButton>
                             </Link>
-                            
+
                             <IconButton
                               color="error"
                               onClick={() => handleRevoke(maintainer.id)}

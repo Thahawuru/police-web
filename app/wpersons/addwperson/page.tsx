@@ -5,13 +5,13 @@ import Welcome from "../../components/navbar/navbar";
 import { TextField, Box, Button, Typography } from "@mui/material";
 import Image from 'next/image';
 import profileAvatar from '../../../public/7309667.jpg';
+import {useApiKeys} from "@/app/api/useApiKeys";
 
-interface Maintainer {
-    id: number;
+interface WantedPerson {
     name: string;
     dob: string;
     gender: string;
-    nic: number;
+    nic: string;
     reasonForBeingWanted: string;
     color: string;
     height: string;
@@ -22,21 +22,34 @@ interface Maintainer {
 }
 
 export default function Page() {
-  const [activeItem, setActiveItem] = useState("Police Officers");
-  const [maintainer, setMaintainer] = useState<Maintainer>({
-    id: 1,
-    name: 'diniru',
-    dob: '2001-9-9',
-    gender: "male",
-    nic: 200117710551,
-    reasonForBeingWanted: 'murder',
-    color: 'black',
-    height: '6ft',
-    bodyType:'body builder',
-    otherInfo:'fucking idiot' ,
-    status: 'active',
+    const {createWantedPerson} = useApiKeys();
+    const [activeItem, setActiveItem] = useState("Wanted Persons");
+  const [wantedPerson, setMaintainer] = useState<WantedPerson>({
+    name: '',
+    dob: '',
+    gender: "",
+    nic: "",
+    reasonForBeingWanted: '',
+    color: '',
+    height: '',
+    bodyType:'',
+    otherInfo:'' ,
+    status: '',
     photo: '',
   });
+    const initialState = {
+        name: "",
+        dob: "",
+        gender: "",
+        nic: "",
+        reasonForBeingWanted: "",
+        color: "",
+        height: "",
+        bodyType: "",
+        otherInfo: "",
+        status: "",
+        photo: ""
+    };
 
   const [files, setFiles] = useState<File[]>([]);
   const [message, setMessage] = useState<string>('');
@@ -48,15 +61,21 @@ export default function Page() {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setMaintainer({
-      ...maintainer,
+      ...wantedPerson,
       [name]: value,
     });
   };
 
-  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    // Handle form submission logic here, such as making an API call
-    console.log("Creating maintainer:", maintainer);
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      console.log("Creating wanted person:", wantedPerson);
+      try {
+          const response = await createWantedPerson(wantedPerson);
+          console.log(response);
+          setMaintainer(initialState);
+      } catch (e) {
+          console.log(e);
+      }
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -103,24 +122,10 @@ export default function Page() {
             >
               <TextField
                 fullWidth
-                label="ID"
-                variant="outlined"
-                name="id"
-                value={maintainer.id}
-                onChange={handleInputChange}
-                margin="normal"
-                InputProps={{
-                  style: {
-                    height: "45px",
-                  },
-                }}
-              />
-              <TextField
-                fullWidth
                 label="Name"
                 variant="outlined"
                 name="name"
-                value={maintainer.name}
+                value={wantedPerson.name}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -134,7 +139,7 @@ export default function Page() {
                 label="Date of birth"
                 variant="outlined"
                 name="dob"
-                value={maintainer.dob}
+                value={wantedPerson.dob}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -148,7 +153,7 @@ export default function Page() {
                 label="Gender"
                 variant="outlined"
                 name="gender"
-                value={maintainer.gender}
+                value={wantedPerson.gender}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -162,7 +167,7 @@ export default function Page() {
                 label="NIC"
                 variant="outlined"
                 name="nic"
-                value={maintainer.nic}
+                value={wantedPerson.nic}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -176,7 +181,7 @@ export default function Page() {
                 label="Reason For Beign Wanted"
                 variant="outlined"
                 name="reasonForBeingWanted"
-                value={maintainer.reasonForBeingWanted}
+                value={wantedPerson.reasonForBeingWanted}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -190,7 +195,7 @@ export default function Page() {
                 label="Color"
                 variant="outlined"
                 name="color"
-                value={maintainer.color}
+                value={wantedPerson.color}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -204,7 +209,7 @@ export default function Page() {
                 label="Height"
                 variant="outlined"
                 name="height"
-                value={maintainer.height}
+                value={wantedPerson.height}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -218,7 +223,7 @@ export default function Page() {
                 label="Body Type"
                 variant="outlined"
                 name="bodyType"
-                value={maintainer.bodyType}
+                value={wantedPerson.bodyType}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -226,41 +231,41 @@ export default function Page() {
                     height: "45px",
                   },
                 }}
-              /> 
+              />
               <TextField
                 fullWidth
                 label="Other Info"
                 variant="outlined"
                 name="otherInfo"
-                value={maintainer.otherInfo}
+                value={wantedPerson.otherInfo}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
                   style: {
                     height: "45px",
                   },
-                }} 
-              /> 
+                }}
+              />
               <TextField
                 fullWidth
                 label="status"
                 variant="outlined"
                 name="status"
-                value={maintainer.status}
+                value={wantedPerson.status}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
                   style: {
                     height: "45px",
                   },
-                }} 
-              /> 
+                }}
+              />
               <TextField
                 fullWidth
                 label="Upload Photos"
                 variant="outlined"
                 name="doj"
-                value={maintainer.photo}
+                value={wantedPerson.photo}
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
@@ -268,8 +273,8 @@ export default function Page() {
                     height: "45px",
                   },
                   disabled: true
-                }} 
-              /> 
+                }}
+              />
               <div className="p-3 md:w-1/2 w-[360px] rounded-md">
                 <span className="flex justify-center items-center bg-white text-[12px] mb-1 text-red-500">{message}</span>
                 <div className="h-32 w-full overflow-hidden relative shadow-md border-2 items-center rounded-md cursor-pointer border-gray-400 border-dotted">
