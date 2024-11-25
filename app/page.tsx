@@ -23,26 +23,9 @@ const LineColumnChart = dynamic(() => import("./charts/LineColumnChart"), {
 const PieChart = dynamic(() => import("./charts/PieChart"), { ssr: false });
 
 function Home() {
-  const [activeItem, setActiveItem] = useState("Dashboard");
+  
+  const [activeItem,setActiveItem] = useState("Dashboard");
 
-
-  const [notifications, setNotifications] = useState<any>("");
-
-  useEffect(() => {
-    let isConnected = false;
-    if(!isConnected) {
-    connectWebSocket((newMessage: any) => {
-        console.log('New Message:', newMessage);
-        setNotifications(newMessage); // Setting the new message
-    });
-    isConnected = true;
-  }
-
-    // return () => {
-    //     disconnectWebSocket();
-    //     isConnected = false;
-    // };
-}, []);
 
   const handleSetActiveItem = (itemTitle: any)=>{
       setActiveItem(itemTitle);
@@ -133,4 +116,5 @@ function Home() {
   );
 }
 
-export default Home;
+export default Home
+

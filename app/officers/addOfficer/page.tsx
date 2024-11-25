@@ -8,7 +8,6 @@ import profileAvatar from "../../../public/7309667.jpg";
 import { useApiKeys } from "../../api/useApiKeys";
 import Toast from "../../components/utils/toaster";
 import Link from "next/link";
-import { connectWebSocket, disconnectWebSocket } from '../../api/websocket';
 import WebSocketContext from "@/app/context/WebSocketContex";
 
 interface PoliceMan {

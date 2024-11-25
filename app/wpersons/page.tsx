@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent, MouseEvent } from "react";
+import React, {useState, ChangeEvent, MouseEvent, useEffect} from "react";
 import Sidebar from "../components/sidebar/sidebar";
 import Welcome from "../components/navbar/navbar";
 import Link from "next/link";
@@ -19,6 +19,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import BlockIcon from "@mui/icons-material/Block";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import {useApiKeys} from "@/app/api/useApiKeys";
+import {number, string} from "prop-types";
 
 interface Maintainer {
     id: number;
@@ -52,16 +54,51 @@ const initialMaintainers: Maintainer[] = [
 
 export default function Page() {
   const [activeItem, setActiveItem] = useState("Wanted Persons");
-
   const handleSetActiveItem = (itemTitle: any) => {
     setActiveItem(itemTitle);
   };
 
-  const [maintainers, setMaintainers] =
-    useState<Maintainer[]>(initialMaintainers);
+  const [maintainers, setMaintainers] = useState<Maintainer[]>(initialMaintainers);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const {fetchAllWantedPersons} = useApiKeys();
+
+  const fetchWantedPersons = async () => {
+    const res = await fetchAllWantedPersons();
+    console.log("All wanted Persons",res);
+
+    const fetchedPersons = res.map((person: {
+      userid: string;
+    name: string;
+    dob: string;
+    gender: string;
+    nic: number;
+    reasonForBeingWanted: string;
+    color: string;
+    height: string;
+    bodyType:string;
+    otherInfo: string;
+    status: string;
+    }) => ({
+      id: person.userid,
+      name: person.name,
+      dob: person.dob,
+      gender: person.gender,
+      nic: person.nic,
+      reasonForBeingWanted: person.reasonForBeingWanted,
+      color: person.color,
+      height: person.height,
+      bodyType: person.bodyType,
+      otherInfo: person.otherInfo,
+      status: person.status,
+    }));
+    setMaintainers(fetchedPersons);
+  };
+
+  useEffect(() => {
+    fetchWantedPersons();
+  },[]);
 
   const handleDelete = (id: number): void => {
     setMaintainers(maintainers.filter((maintainer) => maintainer.id !== id));
