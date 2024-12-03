@@ -2,12 +2,17 @@
 import React, { useState, ChangeEvent, MouseEvent , useEffect } from "react";
 import Sidebar from "../../components/sidebar/sidebar";
 import Welcome from "../../components/navbar/navbar";
+
 import { TextField, Button, Box, Typography } from "@mui/material";
 import Image from 'next/image';
 import profileAvatar from '../../../public/7309667.jpg'
 import { useApiKeys } from "../../api/useApiKeys";
 import { useSearchParams } from "next/navigation";
 import { strict } from "assert";
+import { TextField, Button, Box } from "@mui/material";
+import Image from "next/image";
+import profileAvatar from "../../../public/7309667.jpg";
+
 
 interface Maintainer {
   id: string;
@@ -71,10 +76,13 @@ export default function Page() {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setMaintainer({
-      ...maintainer,
-      [name]: value,
-    });
+
+    setMaintainer((prev) => ({
+      ...prev,
+      [name]: ["id", "badgeNumber", "number"].includes(name)
+        ? parseInt(value, 10) || 0 // Convert numeric fields
+        : value, // Keep string fields as is
+    }));
   };
 
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
@@ -104,13 +112,13 @@ export default function Page() {
               noValidate
               autoComplete="off"
             >
-                  <Image
-                    src={profileAvatar}
-                    alt="image description"
-                    width={150}  
-                    height={150} 
-                    className="rounded-full"
-                  />
+              <Image
+                src={profileAvatar}
+                alt="image description"
+                width={150}
+                height={150}
+                className="rounded-full"
+              />
               <TextField
                 fullWidth
                 label="ID"
@@ -120,9 +128,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -134,9 +140,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -148,9 +152,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -162,9 +164,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -176,9 +176,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -190,9 +188,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -204,9 +200,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -218,9 +212,7 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
               />
               <TextField
@@ -232,11 +224,17 @@ export default function Page() {
                 onChange={handleInputChange}
                 margin="normal"
                 InputProps={{
-                  style: {
-                    height: "45px",
-                  },
+                  style: { height: "45px" },
                 }}
-              /> 
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                className="mt-4"
+              >
+                Submit
+              </Button>
             </Box>
           </Box>
         </div>
