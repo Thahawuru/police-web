@@ -126,8 +126,7 @@ export default function Page() {
       maintainer.rank.toLowerCase().includes(searchQuery.toLowerCase()) ||
       maintainer.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
       maintainer.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      maintainer.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      maintainer.doj.toLowerCase().includes(searchQuery.toLowerCase())
+      maintainer.status.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handlePreview = (id: number): void => {
